@@ -9,34 +9,62 @@ local Player = Players.LocalPlayer
 local PlayerMouse = Player:GetMouse()
 
 local redzlib = {
-Themes = {
-Darker = {
-["Color Hub 1"] = ColorSequence.new({
-ColorSequenceKeypoint.new(0.00, Color3.fromRGB(10, 5, 20)),
-ColorSequenceKeypoint.new(0.25, Color3.fromRGB(25, 10, 40)),
-ColorSequenceKeypoint.new(0.50, Color3.fromRGB(80, 50, 120)),
-ColorSequenceKeypoint.new(0.75, Color3.fromRGB(120, 80, 160)),
-ColorSequenceKeypoint.new(1.00, Color3.fromRGB(70, 40, 100))
-}),
-["Color Hub 2"] = Color3.fromRGB(15, 8, 25),
-["Color Stroke"] = Color3.fromRGB(120, 80, 160),
-["Color Theme"] = Color3.fromRGB(35, 20, 55),
-["Color Text"] = Color3.fromRGB(180, 150, 210),
-["Color Dark Text"] = Color3.fromRGB(140, 120, 170),
-["Color Metallic Highlight"] = Color3.fromRGB(150, 120, 190),
-["Color Metallic Shadow"] = Color3.fromRGB(20, 10, 35),
-["Color Shine"] = Color3.fromRGB(100, 70, 140)
-}
-},
-Info = {
-Version = "1.1.0"
-},
-Save = {
-UISize = {550, 380},
-TabSize = 160,
-Theme = "Darker"
-},
-	Settings = {},
+	Themes = {
+		Darker = {
+			["Color Hub 1"] = ColorSequence.new({
+				ColorSequenceKeypoint.new(0.00, Color3.fromRGB(10, 5, 20)),
+				ColorSequenceKeypoint.new(0.25, Color3.fromRGB(25, 10, 40)),
+				ColorSequenceKeypoint.new(0.50, Color3.fromRGB(80, 50, 120)),
+				ColorSequenceKeypoint.new(0.75, Color3.fromRGB(120, 80, 160)),
+				ColorSequenceKeypoint.new(1.00, Color3.fromRGB(70, 40, 100))
+			}),
+			["Color Hub 2"] = Color3.fromRGB(15, 8, 25),
+			["Color Stroke"] = Color3.fromRGB(120, 80, 160),
+			["Color Theme"] = Color3.fromRGB(35, 20, 55),
+			["Color Text"] = Color3.fromRGB(180, 150, 210),
+			["Color Dark Text"] = Color3.fromRGB(140, 120, 170),
+			["Color Metallic Highlight"] = Color3.fromRGB(150, 120, 190),
+			["Color Metallic Shadow"] = Color3.fromRGB(20, 10, 35),
+			["Color Shine"] = Color3.fromRGB(100, 70, 140)
+		}
+	},
+	Info = {
+		Version = "1.1.0"
+	},
+	Save = {
+		UISize = {550, 380},
+		TabSize = 160,
+		Theme = "Darker"
+	},
+	FontSettings = {
+		FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal),
+		FontFamily = Enum.Font.SourceSansBold,
+		ForceFont = true
+	},
+	
+	-- Função para forçar fonte em todos os elementos de texto
+	ApplyFont = function(self, textObject)
+		if textObject and textObject:IsA("TextLabel") or textObject:IsA("TextButton") or textObject:IsA("TextBox") then
+			textObject.FontFace = self.FontSettings.FontFace
+			textObject.Font = self.FontSettings.FontFamily
+		end
+	end,
+	
+	-- Função para aplicar fonte em todos os descendentes
+	ApplyFontToAll = function(self, parent)
+		for _, child in pairs(parent:GetDescendants()) do
+			if child:IsA("TextLabel") or child:IsA("TextButton") or child:IsA("TextBox") then
+				self:ApplyFont(child)
+			end
+		end
+		
+		-- Listener para novos elementos
+		parent.DescendantAdded:Connect(function(child)
+			if child:IsA("TextLabel") or child:IsA("TextButton") or child:IsA("TextBox") then
+				self:ApplyFont(child)
+			end
+		end)
+	end	Settings = {},
 	Connection = {},
 	Instances = {},
 	Elements = {},
